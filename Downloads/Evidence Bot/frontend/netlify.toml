@@ -1,0 +1,9 @@
+[build]
+  command = "npm run build -- --configuration production"
+  publish = "dist/driving-school-web"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+

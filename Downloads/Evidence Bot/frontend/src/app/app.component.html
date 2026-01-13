@@ -1,0 +1,66 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-white shadow-sm">
+  <div class="container">
+    <a class="navbar-brand" href="#">Driving School Hub</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto align-items-center gap-2">
+        <li class="nav-item"><a class="nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a></li>
+        <li class="nav-item"><a class="nav-link" routerLink="/bookings" routerLinkActive="active">My Bookings</a></li>
+        <li class="nav-item"><a class="nav-link" routerLink="/book-driver" routerLinkActive="active">Book a Driver</a></li>
+        <li class="nav-item"><a class="nav-link" routerLink="/driver" routerLinkActive="active">Driver Dashboard</a></li>
+        <li class="nav-item" *ngIf="isAdmin"><a class="nav-link" routerLink="/admin" routerLinkActive="active">Admin</a></li>
+        <li class="nav-item" *ngIf="!currentUser"><button class="btn btn-outline-primary btn-sm" (click)="openAuth('login')">Login</button></li>
+        <li class="nav-item" *ngIf="!currentUser"><button class="btn btn-primary btn-sm" (click)="openAuth('signup')">Sign up</button></li>
+        <li class="nav-item dropdown" *ngIf="currentUser">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+            {{ currentUser.fullName }}
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><button class="dropdown-item" (click)="logout()">Logout</button></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<router-outlet></router-outlet>
+
+<div class="modal fade show" style="display: block; background: rgba(0,0,0,0.5);" *ngIf="showAuthModal()">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ authMode === 'login' ? 'Login' : 'Sign up' }}</h5>
+        <button type="button" class="btn-close" (click)="closeAuth()"></button>
+      </div>
+      <div class="modal-body">
+        <form (ngSubmit)="submitAuth()">
+          <div *ngIf="authMode === 'signup'" class="mb-3">
+            <label class="form-label">Full name</label>
+            <input class="form-control" [(ngModel)]="authForm.fullName" name="fullName" required>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Email</label>
+            <input type="email" class="form-control" [(ngModel)]="authForm.email" name="email" required>
+          </div>
+          <div *ngIf="authMode === 'signup'" class="mb-3">
+            <label class="form-label">Phone</label>
+            <input class="form-control" [(ngModel)]="authForm.phone" name="phone">
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" class="form-control" [(ngModel)]="authForm.password" name="password" required>
+          </div>
+          <div *ngIf="authError" class="alert alert-danger py-2">{{ authError }}</div>
+          <div class="d-flex justify-content-end gap-2">
+            <button type="button" class="btn btn-light" (click)="closeAuth()">Cancel</button>
+            <button type="submit" class="btn btn-primary">{{ authMode === 'login' ? 'Login' : 'Create account' }}</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
